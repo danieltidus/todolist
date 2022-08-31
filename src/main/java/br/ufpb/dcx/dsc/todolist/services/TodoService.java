@@ -5,13 +5,14 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class TodoService {
 
-    List<Task> taskList = List.of(
+
+    private final List<Task> taskList = Arrays.asList(
             new Task(1L, "Escrever Relatório", LocalDateTime.now()),
             new Task(1L, "Lavar a louça", LocalDateTime.now()),
             new Task(2L, "Estudar para prova", LocalDateTime.now()),
@@ -21,7 +22,7 @@ public class TodoService {
 
         List<Task> selected = new ArrayList<>();
         for (Task task: taskList) {
-            if(task.getUserId() == userId){
+            if(task.getUserId().equals(userId)){
                 selected.add(task);
             }
         }
