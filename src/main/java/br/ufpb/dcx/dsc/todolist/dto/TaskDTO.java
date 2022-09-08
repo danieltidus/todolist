@@ -1,34 +1,32 @@
-package br.ufpb.dcx.dsc.todolist.models;
+package br.ufpb.dcx.dsc.todolist.dto;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
-public class Task {
+public class TaskDTO {
 
     private String nome;
     private Long userId;
+    private Long id;
+
+
     private LocalDate deadline;
-    private final Long id;
-    private static Long IdSequenceCounter = 0L;
 
-    public Task(){
-        this.id = Task.IdSequenceCounter++;
-    }
-
-    public Task(Long userId,String nome, LocalDate deadline){
-        this.userId = userId;
+    public TaskDTO(String nome, Long userId, LocalDate deadline, Long id) {
         this.nome = nome;
-        this.deadline = deadline;
-        this.id = Task.IdSequenceCounter++;
-
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
         this.userId = userId;
+        this.deadline = deadline;
+        this.id = id;
+    }
+
+    public TaskDTO() {
+    }
+
+    public TaskDTO(String nome, Long userId, String deadline) {
+        this.nome = nome;
+        this.userId = userId;
+        // this.deadline = deadline;
     }
 
     public String getNome() {
@@ -37,6 +35,14 @@ public class Task {
 
     public void setNome(String nome) {
         this.nome = nome;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
     }
 
     public LocalDate getDeadline() {
@@ -51,13 +57,16 @@ public class Task {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
     @Override
     public String toString() {
-        return "Task{" +
+        return "TaskDTO{" +
                 "nome='" + nome + '\'' +
                 ", userId=" + userId +
                 ", deadline=" + deadline +
-                ", id=" + id +
                 '}';
     }
 }
