@@ -60,8 +60,8 @@ public class TodoController {
     @PutMapping("/tasks/{taskId}")
     public TaskDTO updateTask(@PathVariable Long taskId, @RequestBody TaskDTO taskDTO){
         Task t = convertToEntity(taskDTO);
-        Task taskCreated = todoService.updateTask(taskId, t);
-        return convertToDTO(taskCreated);
+        Task taskUpdated = todoService.updateTask(taskId, t);
+        return convertToDTO(taskUpdated);
     }
 
     @ResponseStatus(HttpStatus.OK)
