@@ -1,10 +1,9 @@
 package br.ufpb.dcx.dsc.todolist.controller;
 
 import br.ufpb.dcx.dsc.todolist.dto.TaskDTO;
-import br.ufpb.dcx.dsc.todolist.models.Task;
-import br.ufpb.dcx.dsc.todolist.services.TodoService;
+import br.ufpb.dcx.dsc.todolist.model.Task;
+import br.ufpb.dcx.dsc.todolist.service.TodoService;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,18 +15,16 @@ import java.util.stream.Collectors;
 public class TodoController {
 
     // Descomente quando for usar modalMapper como exemplo
-    // private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
     private final TodoService todoService;
 
-    public TodoController(TodoService todoService) {
-        this.todoService = todoService;
-    }
 
     // Descomente quando for usar modalMapper como exemplo
-//    public TodoController(TodoService todoService, ModelMapper modelMapper) {
-//        this.todoService = todoService;
-//        this.modelMapper = modelMapper;
-//    }
+    public TodoController(TodoService todoService, ModelMapper
+            modelMapper) {
+        this.todoService = todoService;
+        this.modelMapper = modelMapper;
+    }
 
     @GetMapping(path = "/tasks/{taskId}")
     public TaskDTO getTask(@PathVariable Long taskId){
@@ -35,20 +32,13 @@ public class TodoController {
         return convertToDTO(t);
     }
 
-    // Exemplo de rota para listagem de todas as tarefas sem query string
-    @GetMapping("/tasks")
-    public List<TaskDTO> getFilteredTasks(){
-        List<Task> tasks = todoService.listTasks();
-        return tasks.stream().map(this::convertToDTO).collect(Collectors.toList());
-    }
-
     // Exemplo com Query strings via ResquestParam - comente o de cima caso queira usar esta rota.
-//    @GetMapping("/tasks")
-//    public List<TaskDTO> getFilteredTasks(@RequestParam(name="user", required = false) Long userId){
-//        System.out.println("userId " + userId);
-//        List<Task> tasks = todoService.listTasks(userId);
-//        return tasks.stream().map(task -> convertToDTO(task)).collect(Collectors.toList());
-//    }
+    @GetMapping("/tasks")
+    public List<TaskDTO> getFilteredTasks(@RequestParam(name="user", required = false) Long userId){
+        System.out.println("userId " + userId);
+        List<Task> tasks = todoService.listTasks(userId);
+        return tasks.stream().map(task -> convertToDTO(task)).collect(Collectors.toList());
+    }
 
     @PostMapping("/tasks")
     public TaskDTO createTask(@RequestBody TaskDTO taskDTO){
@@ -70,22 +60,13 @@ public class TodoController {
         todoService.deleteTask(taskId);
     }
 
-    // Exemplo de conversão sem Modal Mapper
+    // Exemplo de conversão com Modal Mapper
+    // Descomente quando for usar modalMapper como exemplo
     private TaskDTO convertToDTO(Task t) {
-        return new TaskDTO(t.getNome(), t.getUserId(), t.getDeadline(), t.getId());
+        return modelMapper.map(t, TaskDTO.class);
     }
 
     private Task convertToEntity(TaskDTO taskDTO) {
-        return new Task(taskDTO.getUserId(), taskDTO.getNome(), taskDTO.getDeadline());
+        return modelMapper.map(taskDTO, Task.class);
     }
-
-    // Exemplo de conversão com Modal Mapper
-    // Descomente quando for usar modalMapper como exemplo
-//    private TaskDTO convertToDTO(Task t) {
-//        return modelMapper.map(t, TaskDTO.class);
-//    }
-//
-//    private Task convertToEntity(TaskDTO taskDTO) {
-//        return modelMapper.map(taskDTO, Task.class);
-//    }
 }
