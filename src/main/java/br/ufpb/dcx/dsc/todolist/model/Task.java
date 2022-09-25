@@ -9,26 +9,19 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    private Long taskId;
 
     @Column(name = "nome")
     private String nome;
 
-    @Column(name = "user_id")
-    private Long userId;
-
     @Column(name = "deadline")
     private LocalDate deadline;
 
+    @ManyToOne()
+    @JoinColumn(name = "user_id")
+    private User user;
+
     public Task(){
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public String getNome() {
@@ -49,16 +42,24 @@ public class Task {
 
     // Para o ID não temos set já que ele é gerado automaticamente
     public Long getId() {
-        return id;
+        return taskId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
     public String toString() {
         return "Task{" +
-                "nome='" + nome + '\'' +
-                ", userId=" + userId +
+                "id=" + taskId +
+                ", nome='" + nome + '\'' +
                 ", deadline=" + deadline +
-                ", id=" + id +
+                ", user=" + user +
                 '}';
     }
 }

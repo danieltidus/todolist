@@ -2,6 +2,7 @@ package br.ufpb.dcx.dsc.todolist.service;
 
 import br.ufpb.dcx.dsc.todolist.model.Task;
 import br.ufpb.dcx.dsc.todolist.repository.TaskRepository;
+import br.ufpb.dcx.dsc.todolist.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -16,10 +17,14 @@ public class TodoService {
 
 
     private TaskRepository taskRepository;
+    private UserRepository userRepository;
 
-    TodoService(TaskRepository taskRepository){
+    TodoService(TaskRepository taskRepository, UserRepository userRepository)
+    {
         this.taskRepository = taskRepository;
+        this.userRepository = userRepository;
     }
+
     public Task getTask(Long taskId){
         return taskRepository.getReferenceById(taskId);
     }
