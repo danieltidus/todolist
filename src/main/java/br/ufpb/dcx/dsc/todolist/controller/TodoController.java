@@ -14,12 +14,10 @@ import java.util.stream.Collectors;
 @RequestMapping(path="/api")
 public class TodoController {
 
-    // Descomente quando for usar modalMapper como exemplo
     private final ModelMapper modelMapper;
     private final TodoService todoService;
 
 
-    // Descomente quando for usar modalMapper como exemplo
     public TodoController(TodoService todoService, ModelMapper
             modelMapper) {
         this.todoService = todoService;
@@ -32,7 +30,6 @@ public class TodoController {
         return convertToDTO(t);
     }
 
-    // Exemplo com Query strings via ResquestParam - comente o de cima caso queira usar esta rota.
     @GetMapping("/tasks")
     public List<TaskDTO> getFilteredTasks(@RequestParam(name="user", required = false) Long userId){
         System.out.println("userId " + userId);
@@ -61,7 +58,6 @@ public class TodoController {
     }
 
     // Exemplo de conversão com Modal Mapper
-    // Descomente quando for usar modalMapper como exemplo
     private TaskDTO convertToDTO(Task t) {
         return modelMapper.map(t, TaskDTO.class);
     }

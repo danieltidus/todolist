@@ -9,24 +9,9 @@ public class TaskDTO {
     private String nome;
     private Long userId;
     private Long id;
-
-
     private LocalDate deadline;
 
-    public TaskDTO(String nome, Long userId, LocalDate deadline, Long id) {
-        this.nome = nome;
-        this.userId = userId;
-        this.deadline = deadline;
-        this.id = id;
-    }
-
     public TaskDTO() {
-    }
-
-    public TaskDTO(String nome, Long userId, String deadline) {
-        this.nome = nome;
-        this.userId = userId;
-        // this.deadline = deadline;
     }
 
     public String getNome() {
