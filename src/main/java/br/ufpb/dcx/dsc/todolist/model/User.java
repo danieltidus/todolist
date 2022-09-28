@@ -21,6 +21,12 @@ public class User {
     @ManyToMany(mappedBy = "users")
     private Collection<Board> boards;
 
+    @OneToOne
+    @JoinColumn(name = "photo_id")
+    private Photo photo;
+
+    @OneToMany(mappedBy = "user")
+    private Collection<Task> tasks;
     public User() {
     }
 
