@@ -17,6 +17,10 @@ public class Photo {
     @OneToOne(mappedBy = "photo")
     private User user;
 
+    public Photo(String URL) {
+        this.URL = URL;
+    }
+
     public Photo() {
     }
 

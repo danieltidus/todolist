@@ -18,8 +18,11 @@ public class User {
     @Column(name = "email")
     private String email;
 
-    @ManyToMany(mappedBy = "users")
+    @OneToMany(mappedBy = "user")
     private Collection<Board> boards;
+
+    @ManyToMany(mappedBy = "users")
+    private Collection<Board> boardsShared;
 
     @OneToOne
     @JoinColumn(name = "photo_id")
@@ -30,20 +33,12 @@ public class User {
     public User() {
     }
 
-    public Long getUserId() {
+    public Long getId() {
         return id;
     }
 
-    public void setUserId(Long userId) {
-        this.id = userId;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getNome() {
@@ -54,12 +49,45 @@ public class User {
         this.nome = nome;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "userId=" + id +
-                ", email='" + email + '\'' +
-                ", nome='" + nome + '\'' +
-                '}';
+    public String getEmail() {
+        return email;
     }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public Collection<Board> getBoards() {
+        return boards;
+    }
+
+    public void setBoards(Collection<Board> boards) {
+        this.boards = boards;
+    }
+
+    public Collection<Board> getBoardsShared() {
+        return boardsShared;
+    }
+
+    public void setBoardsShared(Collection<Board> boardsShared) {
+        this.boardsShared = boardsShared;
+    }
+
+    public Photo getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
+    }
+
+    public Collection<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Collection<Task> tasks) {
+        this.tasks = tasks;
+    }
+
+
 }

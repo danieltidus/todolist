@@ -24,27 +24,27 @@ public class TodoController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping(path = "/tasks/{taskId}")
+    @GetMapping(path = "/task/{taskId}")
     public TaskDTO getTask(@PathVariable Long taskId){
         Task t =  todoService.getTask(taskId);
         return convertToDTO(t);
     }
 
-    @GetMapping("/tasks")
+    @GetMapping("/task")
     public List<TaskDTO> getFilteredTasks(@RequestParam(name="user", required = false) Long userId){
         System.out.println("userId " + userId);
         List<Task> tasks = todoService.listTasks(userId);
         return tasks.stream().map(task -> convertToDTO(task)).collect(Collectors.toList());
     }
 
-    @PostMapping("/tasks")
+    @PostMapping("/task")
     public TaskDTO createTask(@RequestBody TaskDTO taskDTO){
         Task t = convertToEntity(taskDTO);
         Task taskCreated = todoService.saveTask(t);
         return convertToDTO(taskCreated);
     }
 
-    @PutMapping("/tasks/{taskId}")
+    @PutMapping("/task/{taskId}")
     public TaskDTO updateTask(@PathVariable Long taskId, @RequestBody TaskDTO taskDTO){
         Task t = convertToEntity(taskDTO);
         Task taskUpdated = todoService.updateTask(taskId, t);
@@ -52,12 +52,11 @@ public class TodoController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/tasks/{taskId}")
+    @DeleteMapping("/task/{taskId}")
     public void deleteTask(@PathVariable Long taskId){
         todoService.deleteTask(taskId);
     }
 
-    // Exemplo de conversão com Modal Mapper
     private TaskDTO convertToDTO(Task t) {
         return modelMapper.map(t, TaskDTO.class);
     }
