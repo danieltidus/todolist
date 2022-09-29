@@ -5,6 +5,7 @@ import br.ufpb.dcx.dsc.todolist.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -20,5 +21,20 @@ public class UserService {
 
     public User createUser(User user){
         return userRepository.save(user);
+    }
+
+    public User updateUser(Long userId, User u) {
+        Optional<User> userOpt = userRepository.findById(userId);
+        if(userOpt.isPresent()){
+            User user = userOpt.get();
+            user.setEmail(u.getEmail());
+            user.setNome(u.getNome());
+            userRepository.save(user);
+        }
+        return null;
+    }
+    
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
     }
 }
