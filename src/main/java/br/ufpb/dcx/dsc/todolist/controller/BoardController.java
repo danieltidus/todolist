@@ -1,20 +1,23 @@
 package br.ufpb.dcx.dsc.todolist.controller;
 
 import br.ufpb.dcx.dsc.todolist.dto.BoardDTO;
+import br.ufpb.dcx.dsc.todolist.dto.UserDTO;
 import br.ufpb.dcx.dsc.todolist.model.Board;
+import br.ufpb.dcx.dsc.todolist.model.User;
 import br.ufpb.dcx.dsc.todolist.service.BoardService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping(name = "/api")
+@RequestMapping(path = "/api")
 public class BoardController {
 
-    private ModelMapper modelMapper;
-    private BoardService boardService;
+    private final ModelMapper modelMapper;
+    private final BoardService boardService;
 
     public BoardController(BoardService boardService, ModelMapper modelMapper){
         this.boardService = boardService;
@@ -23,8 +26,9 @@ public class BoardController {
 
 
     @GetMapping(path = "/board")
-    List<Board> listBoards(){
-        return boardService.listBoards();
+    List<BoardDTO> listBoards(){
+        return boardService.listBoards().stream().map(board -> convertToDTO(board)).collect(Collectors.toList());
+
     }
 
     @GetMapping("/board/{boardId}")
@@ -41,19 +45,20 @@ public class BoardController {
         return convertToDTO(saved);
     }
 
-//    @PutMapping("/board/{boardId}")
-//    public BoardDTO updateTask(@PathVariable Long boardId, @RequestBody BoardDTO boardDTO){
-//
-//        Board u = convertToEntity(boardDTO);
-//        Board boardUpdated = boardService.updateBoard(boardId, u);
-//        return convertToDTO(boardUpdated);
-//    }
+    @PutMapping("/board/{boardId}")
+    public BoardDTO updateTask(@PathVariable Long boardId, @RequestBody BoardDTO boardDTO){
+
+        Board u = convertToEntity(boardDTO);
+        Board boardUpdated = boardService.updateBoard(boardId, u);
+        return convertToDTO(boardUpdated);
+    }
 
     @ResponseStatus(HttpStatus.OK)
     @DeleteMapping("/board/{boardId}")
     public void deleteBoard(@PathVariable Long boardId){
         boardService.deleteBoard(boardId);
     }
+
 
     private BoardDTO convertToDTO(Board u) {
         return modelMapper.map(u, BoardDTO.class);

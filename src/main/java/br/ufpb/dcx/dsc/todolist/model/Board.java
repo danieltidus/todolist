@@ -1,5 +1,7 @@
 package br.ufpb.dcx.dsc.todolist.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Collection;
 
@@ -20,11 +22,14 @@ public class Board {
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToMany()
-    @JoinTable(name = "compartilhamento",
-    joinColumns = @JoinColumn(name = "board_id"),
-    inverseJoinColumns = @JoinColumn(name = "user_id"))
+
+    @ManyToMany(mappedBy = "boardsShared", fetch = FetchType.EAGER)
+    @JsonIgnore
     private Collection<User> users;
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.ALL)
+    @JsonIgnore
+    Collection<Task> tasks;
 
     public Board(){}
 
@@ -59,6 +64,14 @@ public class Board {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Collection<Task> getTasks() {
+        return tasks;
+    }
+
+    public void setTasks(Collection<Task> tasks) {
+        this.tasks = tasks;
     }
 
     @Override

@@ -17,9 +17,9 @@ public class Task {
     @Column(name = "deadline")
     private LocalDate deadline;
 
-    @ManyToOne()
-    @JoinColumn(name = "user_id")
-    private User user;
+    @ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "board_id")
+    private Board board;
 
     public Task(){
     }
@@ -45,21 +45,21 @@ public class Task {
         return taskId;
     }
 
-    public User getUser() {
-        return user;
+    public Board getBoard() {
+        return board;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
     @Override
     public String toString() {
         return "Task{" +
-                "id=" + taskId +
+                "taskId=" + taskId +
                 ", nome='" + nome + '\'' +
                 ", deadline=" + deadline +
-                ", user=" + user +
+                ", board=" + board +
                 '}';
     }
 }

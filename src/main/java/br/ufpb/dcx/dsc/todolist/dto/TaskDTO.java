@@ -1,5 +1,6 @@
 package br.ufpb.dcx.dsc.todolist.dto;
 
+import br.ufpb.dcx.dsc.todolist.model.Board;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
@@ -7,9 +8,9 @@ import java.time.LocalDate;
 public class TaskDTO {
 
     private String nome;
-    private Long userId;
     private Long id;
     private LocalDate deadline;
+    private Board board;
 
     public TaskDTO() {
     }
@@ -20,14 +21,6 @@ public class TaskDTO {
 
     public void setNome(String nome) {
         this.nome = nome;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
     }
 
     public LocalDate getDeadline() {
@@ -46,12 +39,21 @@ public class TaskDTO {
         this.id = id;
     }
 
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
+    }
+
     @Override
     public String toString() {
         return "TaskDTO{" +
                 "nome='" + nome + '\'' +
-                ", userId=" + userId +
+                ", id=" + id +
                 ", deadline=" + deadline +
+                ", board=" + board +
                 '}';
     }
 }

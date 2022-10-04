@@ -1,6 +1,8 @@
 package br.ufpb.dcx.dsc.todolist.controller;
 
+import br.ufpb.dcx.dsc.todolist.dto.BoardDTO;
 import br.ufpb.dcx.dsc.todolist.dto.UserDTO;
+import br.ufpb.dcx.dsc.todolist.model.Board;
 import br.ufpb.dcx.dsc.todolist.model.User;
 import br.ufpb.dcx.dsc.todolist.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -8,13 +10,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")
 public class UserController {
 
-    private UserService userService;
+    private final UserService userService;
     private final ModelMapper modelMapper;
 
     public  UserController(UserService userService, ModelMapper modelMapper){
@@ -53,6 +54,18 @@ public class UserController {
     @DeleteMapping("/user/{userId}")
     public void deleteUser(@PathVariable Long userId){
         userService.deleteUser(userId);
+    }
+
+    @GetMapping("/board/{boardId}/user/{userId}/share")
+    public UserDTO shareBoard(@PathVariable Long userId, @PathVariable Long boardId){
+        User u = userService.share(boardId, userId);
+        return convertToDTO(u);
+    }
+
+    @DeleteMapping("/board/{boardId}/user/{userId}/share")
+    public UserDTO unshareBoard(@PathVariable Long userId, @PathVariable Long boardId){
+        User u = userService.unshare(boardId, userId);
+        return convertToDTO(u);
     }
 
     private UserDTO convertToDTO(User u) {

@@ -31,16 +31,15 @@ public class TodoController {
     }
 
     @GetMapping("/task")
-    public List<TaskDTO> getFilteredTasks(@RequestParam(name="user", required = false) Long userId){
-        System.out.println("userId " + userId);
-        List<Task> tasks = todoService.listTasks(userId);
+    public List<TaskDTO> getFilteredTasks(){
+        List<Task> tasks = todoService.listTasks();
         return tasks.stream().map(task -> convertToDTO(task)).collect(Collectors.toList());
     }
 
-    @PostMapping("/task")
-    public TaskDTO createTask(@RequestBody TaskDTO taskDTO){
+    @PostMapping("/board/{boardId}/task")
+    public TaskDTO createTask(@RequestBody TaskDTO taskDTO, @PathVariable Long boardId){
         Task t = convertToEntity(taskDTO);
-        Task taskCreated = todoService.saveTask(t);
+        Task taskCreated = todoService.saveTask(boardId, t);
         return convertToDTO(taskCreated);
     }
 
