@@ -7,12 +7,15 @@ import br.ufpb.dcx.dsc.todolist.repository.BoardRepository;
 import br.ufpb.dcx.dsc.todolist.repository.PhotoRepository;
 import br.ufpb.dcx.dsc.todolist.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
+import javax.validation.constraints.Min;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@Validated
 public class UserService {
     private UserRepository userRepository;
     private PhotoRepository photoRepository;
@@ -27,7 +30,7 @@ public class UserService {
     public List<User> listUsers() {
         return userRepository.findAll();
     }
-    public User getUser(Long userId) {
+    public User getUser(@Min(4) Long userId) {
 
         if(userId != null)
             return userRepository.getReferenceById(userId);

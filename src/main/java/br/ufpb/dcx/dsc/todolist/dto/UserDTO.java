@@ -1,12 +1,20 @@
 package br.ufpb.dcx.dsc.todolist.dto;
 
 import br.ufpb.dcx.dsc.todolist.model.Photo;
-import br.ufpb.dcx.dsc.todolist.model.User;
+import br.ufpb.dcx.dsc.todolist.validation.DCXEmail;
+
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 public class UserDTO {
 
     private Long id;
+
+    @NotBlank
     private String nome;
+
+    @Email
+    @DCXEmail
     private String email;
 
     private Photo photo;

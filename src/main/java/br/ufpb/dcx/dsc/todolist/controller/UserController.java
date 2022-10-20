@@ -7,8 +7,11 @@ import br.ufpb.dcx.dsc.todolist.model.User;
 import br.ufpb.dcx.dsc.todolist.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.HttpStatus;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -29,14 +32,14 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}")
-    public UserDTO getUser(@PathVariable Long userId){
+    public UserDTO getUser( @PathVariable Long userId){
         User user = userService.getUser(userId);
         return convertToDTO(user);
     }
 
 
     @PostMapping(path = "/user")
-    UserDTO createUser(@RequestBody UserDTO userDTO){
+    UserDTO createUser(@Valid @RequestBody UserDTO userDTO){
         User u = convertToEntity(userDTO);
         User saved = userService.createUser(u);
         return convertToDTO(saved);

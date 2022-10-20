@@ -1,6 +1,7 @@
 package br.ufpb.dcx.dsc.todolist.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sun.istack.NotNull;
 
 import javax.persistence.*;
 import java.util.Collection;
