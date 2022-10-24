@@ -1,8 +1,6 @@
 package br.ufpb.dcx.dsc.todolist.controller;
 
-import br.ufpb.dcx.dsc.todolist.dto.BoardDTO;
 import br.ufpb.dcx.dsc.todolist.dto.UserDTO;
-import br.ufpb.dcx.dsc.todolist.model.Board;
 import br.ufpb.dcx.dsc.todolist.model.User;
 import br.ufpb.dcx.dsc.todolist.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -16,6 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(path = "/api")
+@Validated
 public class UserController {
 
     private final UserService userService;
@@ -32,8 +31,9 @@ public class UserController {
     }
 
     @GetMapping("/user/{userId}")
-    public UserDTO getUser( @PathVariable Long userId){
+    public UserDTO getUser(@PathVariable @Min(4) Long userId){
         User user = userService.getUser(userId);
+        System.out.println(user.toString());
         return convertToDTO(user);
     }
 

@@ -9,7 +9,7 @@ import java.lang.annotation.*;
 @Constraint(validatedBy = DCXEmailValidator.class)
 @Documented
 public @interface DCXEmail {
-    String message() default "Somente emails do domínio @dcx.ufpb.br";
+    String message() default "Only emails ended with @dcx.ufpb.br are valid";
 
     Class<?>[] groups() default {};
 
