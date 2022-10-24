@@ -1,5 +1,6 @@
 package br.ufpb.dcx.dsc.todolist.service;
 
+import br.ufpb.dcx.dsc.todolist.exception.ItemNotFoundException;
 import br.ufpb.dcx.dsc.todolist.model.Board;
 import br.ufpb.dcx.dsc.todolist.model.Photo;
 import br.ufpb.dcx.dsc.todolist.model.User;
@@ -9,13 +10,13 @@ import br.ufpb.dcx.dsc.todolist.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
+import javax.persistence.EntityNotFoundException;
 import javax.validation.constraints.Min;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
-@Validated
 public class UserService {
     private UserRepository userRepository;
     private PhotoRepository photoRepository;
@@ -30,11 +31,8 @@ public class UserService {
     public List<User> listUsers() {
         return userRepository.findAll();
     }
-    public User getUser(@Min(4) Long userId) {
-
-        if(userId != null)
-            return userRepository.getReferenceById(userId);
-        return null;
+    public User getUser(Long userId) {
+            return userRepository.findById(userId).orElseThrow(() -> new ItemNotFoundException("User " + userId + " not found!"));
     }
 
     public User createUser(User user){
@@ -58,8 +56,8 @@ public class UserService {
     
     public void deleteUser(Long userId) {
         Optional<User> uOpt = userRepository.findById(userId);
-        User u = uOpt.get();
         if(uOpt.isPresent()){
+            User u = uOpt.get();
             // Remove all boards shared with me
             u.getBoardsShared().removeAll(u.getBoardsShared());
 
@@ -76,6 +74,8 @@ public class UserService {
             userRepository.save(u);
             userRepository.delete(u);
         }
+
+        throw new ItemNotFoundException("User " + userId + " not found!");
 
     }
 
