@@ -7,6 +7,7 @@ import br.ufpb.dcx.dsc.todolist.model.User;
 import br.ufpb.dcx.dsc.todolist.repository.BoardRepository;
 import br.ufpb.dcx.dsc.todolist.repository.PhotoRepository;
 import br.ufpb.dcx.dsc.todolist.repository.UserRepository;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
@@ -22,10 +23,13 @@ public class UserService {
     private PhotoRepository photoRepository;
     private BoardRepository boardRepository;
 
-    public UserService(UserRepository userRepository, PhotoRepository photoRepository, BoardRepository boardRepository){
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    public UserService(UserRepository userRepository, PhotoRepository photoRepository, BoardRepository boardRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.userRepository = userRepository;
         this.photoRepository = photoRepository;
         this.boardRepository = boardRepository;
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
     public List<User> listUsers() {
@@ -36,7 +40,7 @@ public class UserService {
     }
 
     public User createUser(User user){
-
+        user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         Photo photo = new Photo("www.exemplo.com/foto.png");
         photoRepository.save(photo);
         user.setPhoto(photo);
