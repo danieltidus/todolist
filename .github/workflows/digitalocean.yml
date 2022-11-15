@@ -49,8 +49,8 @@ jobs:
           docker network create app-net
           
           #Run database
-          docker run -d  --net app-net  -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=123456 -e POSTGRES_DB=todolistdb --name db postgres:13.1-alpine          
+          docker run -d  --net app-net  -e POSTGRES_USER=${{ secrets.DB_USERNAME }} -e POSTGRES_PASSWORD=${{ secrets.DB_PASSWORD }} -e POSTGRES_DB=todolistdb --name db postgres:13.1-alpine          
               
           #Start application
-          docker run --rm --net app-net -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/todolistdb -e SPRING_DATASOURCE_PASSWORD=123456 -e SPRING_DATASOURCE_USERNAME=postgres -e SPRING_JPA_HIBERNATE_DDL_AUTO=update --name app -d registry.digitalocean.com/demo-dsc/todo-list:latest
+          docker run --rm --net app-net -p 8080:8080 -e SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/todolistdb -e SPRING_DATASOURCE_PASSWORD=${{ secrets.DB_PASSWORD }} -e SPRING_DATASOURCE_USERNAME=${{ secrets.DB_USERNAME }} -e SPRING_JPA_HIBERNATE_DDL_AUTO=update --name app -d registry.digitalocean.com/demo-dsc/todo-list:latest
           
