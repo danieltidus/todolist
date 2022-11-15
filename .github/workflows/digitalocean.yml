@@ -34,7 +34,7 @@ jobs:
         KEY: ${{ secrets.SSHKEY }}
         script: |
           # Login in registry
-          docker login  registry.digitalocean.com/demo-dsc -p dop_v1_379de9f69dc37ee78a01690a97aab3509517be1b9d0c63dcd48647ea33f727ed -u dop_v1_379de9f69dc37ee78a01690a97aab3509517be1b9d0c63dcd48647ea33f727ed
+          docker login  registry.digitalocean.com/demo-dsc -p ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }} -u ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
           
           # Update image
           docker pull registry.digitalocean.com/demo-dsc/todo-list:latest
