@@ -10,7 +10,7 @@ public class TaskDTO {
     private Long userId;
     private Long id;
 
-
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate deadline;
 
     public TaskDTO(String nome, Long userId, LocalDate deadline, Long id) {

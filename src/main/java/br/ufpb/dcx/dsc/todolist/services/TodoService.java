@@ -48,7 +48,11 @@ public class TodoService {
         return taskList;
     }
 
-    public Task saveTask(Task t) {
+    public Task createTask(Task t) {
+        Task task = new Task();
+        task.setUserId(t.getUserId());
+        task.setDeadline(t.getDeadline());
+        task.setNome(t.getNome());
         taskList.add(t);
         return t;
     }
