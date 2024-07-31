@@ -19,7 +19,7 @@ public class TodoController {
     // Descomente quando for usar modalMapper como exemplo
     // private final ModelMapper modelMapper;
     private final TodoService todoService;
-    TaskMapper taskMapper;
+    private final TaskMapper taskMapper;
 
     public TodoController(TodoService todoService, TaskMapper taskMapper) {
         this.todoService = todoService;
@@ -59,7 +59,7 @@ public class TodoController {
         return taskMapper.toDto(taskUpdated);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/tasks/{taskId}")
     public void deleteTask(@PathVariable Long taskId){
         todoService.deleteTask(taskId);
