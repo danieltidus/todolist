@@ -6,15 +6,16 @@ import java.time.LocalDate;
 
 public class TaskDTO {
 
-    private String nome;
+    private String name;
     private Long userId;
     private Long id;
 
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate deadline;
 
     public TaskDTO(String nome, Long userId, LocalDate deadline, Long id) {
-        this.nome = nome;
+        this.name = nome;
         this.userId = userId;
         this.deadline = deadline;
         this.id = id;
@@ -24,17 +25,17 @@ public class TaskDTO {
     }
 
     public TaskDTO(String nome, Long userId, String deadline) {
-        this.nome = nome;
+        this.name = nome;
         this.userId = userId;
         // this.deadline = deadline;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Long getUserId() {
@@ -64,7 +65,7 @@ public class TaskDTO {
     @Override
     public String toString() {
         return "TaskDTO{" +
-                "nome='" + nome + '\'' +
+                "nome='" + name + '\'' +
                 ", userId=" + userId +
                 ", deadline=" + deadline +
                 '}';

@@ -1,23 +1,24 @@
 package br.ufpb.dcx.dsc.todolist.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
-//@Entity
-//@Table(name = "tb_tasks")
+@Entity
+@Table(name = "tb_tasks")
 public class Task {
 
- //   @Id
-  //  @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-//    @Column(name = "nome")
-    private String nome;
+    @Column(name = "name")
+    private String name;
 
-  //  @Column(name = "user_id")
+    @Column(name = "user_id")
     private Long userId;
 
-//    @Column(name = "deadline")
+    @Column(name = "deadline")
     private LocalDate deadline;
 
     // Não precisamos mais deste gerador sequencial
@@ -27,9 +28,9 @@ public class Task {
         this.id = Task.IdSequenceCounter++;
     }
 
-    public Task(Long userId,String nome, LocalDate deadline){
+    public Task(Long userId,String name, LocalDate deadline){
         this.userId = userId;
-        this.nome = nome;
+        this.name = name;
         this.deadline = deadline;
         this.id = Task.IdSequenceCounter++;
 
@@ -43,12 +44,12 @@ public class Task {
         this.userId = userId;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public LocalDate getDeadline() {
@@ -67,7 +68,7 @@ public class Task {
     @Override
     public String toString() {
         return "Task{" +
-                "nome='" + nome + '\'' +
+                "nome='" + name + '\'' +
                 ", userId=" + userId +
                 ", deadline=" + deadline +
                 ", id=" + id +

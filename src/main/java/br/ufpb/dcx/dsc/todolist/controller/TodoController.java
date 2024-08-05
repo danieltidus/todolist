@@ -37,7 +37,7 @@ public class TodoController {
     public List<TaskDTO> getFilteredTasks(@RequestParam(name="user", required = false) Long userId){
         System.out.println("userId " + userId);
         List<Task> tasks = todoService.listTasks(userId);
-        return tasks.stream().map(task -> convertToDTO(task)).collect(Collectors.toList());
+        return tasks.stream().map(this::convertToDTO).collect(Collectors.toList());
     }
 
     @PostMapping("/tasks")
@@ -60,8 +60,6 @@ public class TodoController {
         todoService.deleteTask(taskId);
     }
 
-    // Exemplo de conversão com Modal Mapper
-    // Descomente quando for usar modalMapper como exemplo
     private TaskDTO convertToDTO(Task t) {
         return modelMapper.map(t, TaskDTO.class);
     }
