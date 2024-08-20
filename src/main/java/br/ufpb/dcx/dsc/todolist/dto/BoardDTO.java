@@ -2,11 +2,6 @@ package br.ufpb.dcx.dsc.todolist.dto;
 
 import br.ufpb.dcx.dsc.todolist.model.User;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-
 public class BoardDTO {
 
     private Long id;
