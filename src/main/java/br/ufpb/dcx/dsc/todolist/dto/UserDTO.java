@@ -3,8 +3,9 @@ package br.ufpb.dcx.dsc.todolist.dto;
 import br.ufpb.dcx.dsc.todolist.model.Photo;
 import br.ufpb.dcx.dsc.todolist.validation.DCXEmail;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class UserDTO {
 

@@ -25,27 +25,27 @@ public class BoardController {
     }
 
 
-    @GetMapping(path = "/board")
+    @GetMapping(path = "/boards")
     List<BoardDTO> listBoards(){
         return boardService.listBoards().stream().map(board -> convertToDTO(board)).collect(Collectors.toList());
 
     }
 
-    @GetMapping("/board/{boardId}")
+    @GetMapping("/boards/{boardId}")
     public BoardDTO getBoard(@PathVariable Long boardId){
         Board board = boardService.getBoard(boardId);
         return convertToDTO(board);
     }
 
 
-    @PostMapping(path = "/user/{userId}/board")
+    @PostMapping(path = "/users/{userId}/boards")
     BoardDTO createBoard(@RequestBody BoardDTO boardDTO, @PathVariable Long userId){
         Board b = convertToEntity(boardDTO);
         Board saved = boardService.createBoard(b, userId);
         return convertToDTO(saved);
     }
 
-    @PutMapping("/board/{boardId}")
+    @PutMapping("/boards/{boardId}")
     public BoardDTO updateTask(@PathVariable Long boardId, @RequestBody BoardDTO boardDTO){
 
         Board u = convertToEntity(boardDTO);
@@ -54,7 +54,7 @@ public class BoardController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/board/{boardId}")
+    @DeleteMapping("/boards/{boardId}")
     public void deleteBoard(@PathVariable Long boardId){
         boardService.deleteBoard(boardId);
     }

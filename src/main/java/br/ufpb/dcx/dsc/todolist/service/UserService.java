@@ -10,8 +10,8 @@ import br.ufpb.dcx.dsc.todolist.repository.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.EntityNotFoundException;
-import javax.validation.constraints.Min;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.Min;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;

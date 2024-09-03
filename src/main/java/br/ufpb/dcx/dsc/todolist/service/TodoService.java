@@ -1,5 +1,6 @@
 package br.ufpb.dcx.dsc.todolist.service;
 
+import br.ufpb.dcx.dsc.todolist.exception.ItemNotFoundException;
 import br.ufpb.dcx.dsc.todolist.model.Board;
 import br.ufpb.dcx.dsc.todolist.model.Task;
 import br.ufpb.dcx.dsc.todolist.repository.BoardRepository;
@@ -24,7 +25,7 @@ public class TodoService {
     }
 
     public Task getTask(Long taskId){
-        return taskRepository.getReferenceById(taskId);
+        return taskRepository.findById(taskId).orElseThrow(() -> new ItemNotFoundException("Task not found"));
     }
 
     public List<Task> listTasks(){

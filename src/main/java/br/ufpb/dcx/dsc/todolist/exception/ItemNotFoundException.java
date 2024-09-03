@@ -1,8 +1,12 @@
 package br.ufpb.dcx.dsc.todolist.exception;
 
-public class ItemNotFoundException extends RuntimeException{
+public class ItemNotFoundException extends RuntimeException {
 
-    public ItemNotFoundException(String message){
+    public ItemNotFoundException(String message) {
         super(message);
+    }
+
+    public ItemNotFoundException() {
+        super("Item not found");
     }
 }
