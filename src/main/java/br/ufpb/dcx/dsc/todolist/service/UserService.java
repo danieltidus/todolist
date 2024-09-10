@@ -11,19 +11,18 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 
-import javax.persistence.EntityNotFoundException;
-import javax.validation.constraints.Min;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.constraints.Min;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
 @Service
 public class UserService {
-    private UserRepository userRepository;
-    private PhotoRepository photoRepository;
-    private BoardRepository boardRepository;
-
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final UserRepository userRepository;
+    private final PhotoRepository photoRepository;
+    private final BoardRepository boardRepository;
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public UserService(UserRepository userRepository, PhotoRepository photoRepository, BoardRepository boardRepository, BCryptPasswordEncoder bCryptPasswordEncoder){
         this.userRepository = userRepository;

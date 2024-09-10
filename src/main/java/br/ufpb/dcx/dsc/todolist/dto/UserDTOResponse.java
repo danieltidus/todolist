@@ -3,34 +3,16 @@ package br.ufpb.dcx.dsc.todolist.dto;
 import br.ufpb.dcx.dsc.todolist.model.Photo;
 import br.ufpb.dcx.dsc.todolist.validation.DCXEmail;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
-public class UserDTO {
+import java.util.Objects;
 
+public class UserDTOResponse {
     private Long id;
-
-    @NotNull
-    @NotBlank
     private String nome;
-
-    @Email
-    @DCXEmail
     private String email;
-
-    private Photo photo;
-
-    @NotNull
-    @NotBlank
     private String username;
-
-    @NotNull
-    @NotBlank
-    private String password;
-
-    public UserDTO(){}
+    private Photo photo;
 
     public Long getId() {
         return id;
@@ -72,21 +54,28 @@ public class UserDTO {
         this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        UserDTOResponse that = (UserDTOResponse) o;
+        return Objects.equals(id, that.id) && Objects.equals(nome, that.nome) && Objects.equals(email, that.email) && Objects.equals(photo, that.photo) && Objects.equals(username, that.username);
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, nome, email, photo, username);
     }
 
     @Override
     public String toString() {
-        return "UserDTO{" +
+        return "UserDTOResponse{" +
                 "id=" + id +
                 ", nome='" + nome + '\'' +
                 ", email='" + email + '\'' +
                 ", photo=" + photo +
+                ", username='" + username + '\'' +
                 '}';
     }
 }
+

@@ -1,6 +1,7 @@
 package br.ufpb.dcx.dsc.todolist.controller;
 
 import br.ufpb.dcx.dsc.todolist.dto.UserDTO;
+import br.ufpb.dcx.dsc.todolist.dto.UserDTOResponse;
 import br.ufpb.dcx.dsc.todolist.model.User;
 import br.ufpb.dcx.dsc.todolist.service.UserService;
 import org.modelmapper.ModelMapper;
@@ -8,8 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import javax.validation.constraints.Min;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
 import java.util.List;
 
 @RestController
@@ -25,28 +26,30 @@ public class UserController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping(path = "/user")
-    List<User> listUsers(){
-        return userService.listUsers();
+    @GetMapping(path = "/users")
+    List<UserDTOResponse> listUsers(){
+        return userService.listUsers().stream()
+                .map(this::convertToDTO)
+                .toList();
     }
 
-    @GetMapping("/user/{userId}")
-    public UserDTO getUser(@PathVariable @Min(4) Long userId){
+    @GetMapping("/users/{userId}")
+    public UserDTOResponse getUser(@PathVariable @Min(4) Long userId){
         User user = userService.getUser(userId);
         System.out.println(user.toString());
         return convertToDTO(user);
     }
 
 
-    @PostMapping(path = "/user")
-    UserDTO createUser(@Valid @RequestBody UserDTO userDTO){
+    @PostMapping(path = "/users")
+    UserDTOResponse createUser(@Valid @RequestBody UserDTO userDTO){
         User u = convertToEntity(userDTO);
         User saved = userService.createUser(u);
         return convertToDTO(saved);
     }
 
-    @PutMapping("/user/{userId}")
-    public UserDTO updateTask(@PathVariable Long userId, @RequestBody UserDTO userDTO){
+    @PutMapping("/users/{userId}")
+    public UserDTOResponse updateTask(@PathVariable Long userId, @RequestBody UserDTO userDTO){
 
         User u = convertToEntity(userDTO);
         User userUpdated = userService.updateUser(userId, u);
@@ -54,25 +57,25 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/user/{userId}")
+    @DeleteMapping("/users/{userId}")
     public void deleteUser(@PathVariable Long userId){
         userService.deleteUser(userId);
     }
 
-    @GetMapping("/board/{boardId}/user/{userId}/share")
-    public UserDTO shareBoard(@PathVariable Long userId, @PathVariable Long boardId){
+    @GetMapping("/boards/{boardId}/users/{userId}/share")
+    public UserDTOResponse shareBoard(@PathVariable Long userId, @PathVariable Long boardId){
         User u = userService.share(boardId, userId);
         return convertToDTO(u);
     }
 
-    @DeleteMapping("/board/{boardId}/user/{userId}/share")
-    public UserDTO unshareBoard(@PathVariable Long userId, @PathVariable Long boardId){
+    @DeleteMapping("/boards/{boardId}/users/{userId}/share")
+    public UserDTOResponse unshareBoard(@PathVariable Long userId, @PathVariable Long boardId){
         User u = userService.unshare(boardId, userId);
         return convertToDTO(u);
     }
 
-    private UserDTO convertToDTO(User u) {
-        return modelMapper.map(u, UserDTO.class);
+    private UserDTOResponse convertToDTO(User u) {
+        return modelMapper.map(u, UserDTOResponse.class);
     }
 
     private User convertToEntity(UserDTO userDTO) {

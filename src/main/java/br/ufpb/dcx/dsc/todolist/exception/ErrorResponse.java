@@ -1,52 +1,50 @@
 package br.ufpb.dcx.dsc.todolist.exception;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import org.springframework.validation.Errors;
+import com.fasterxml.jackson.annotation.JsonFormat;
 
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Objects;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-public class ErrorResponse {
-    private final int status;
-    private final String message;
-    private String stackTrace;
-    private List<ValidationError> errors;
+public record ErrorResponse(
 
-    public ErrorResponse(int status, String message) {
-        this.status = status;
-        this.message = message;
-    }
+        @JsonFormat(pattern = "dd-MM-yyyy HH:mm:ss")
+        LocalDateTime timestamp,
 
-    public void addValidationError(String field, String message){
-        if(Objects.isNull(errors)){
-            errors = new ArrayList<>();
+        Integer code,
+
+        String status,
+
+        List<String> errors
+
+) {
+    public static class Builder {
+        private LocalDateTime timestamp;
+        private Integer code;
+        private String status;
+        private List<String> errors;
+
+        public Builder timestamp(LocalDateTime timestamp) {
+            this.timestamp = timestamp;
+            return this;
         }
-        errors.add(new ValidationError(field, message));
-    }
 
-    public int getStatus() {
-        return status;
-    }
+        public Builder code(Integer code) {
+            this.code = code;
+            return this;
+        }
 
-    public String getMessage() {
-        return message;
-    }
+        public Builder status(String status) {
+            this.status = status;
+            return this;
+        }
 
-    public String getStackTrace() {
-        return stackTrace;
-    }
+        public Builder errors(List<String> errors) {
+            this.errors = errors;
+            return this;
+        }
 
-    public void setStackTrace(String stackTrace) {
-        this.stackTrace = stackTrace;
-    }
-
-    public List<ValidationError> getErrors() {
-        return errors;
-    }
-
-    public void setErrors(List<ValidationError> errors) {
-        this.errors = errors;
+        public ErrorResponse build() {
+            return new ErrorResponse(timestamp, code, status, errors);
+        }
     }
 }

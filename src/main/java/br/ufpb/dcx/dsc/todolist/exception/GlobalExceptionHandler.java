@@ -1,80 +1,79 @@
 package br.ufpb.dcx.dsc.todolist.exception;
 
-import br.ufpb.dcx.dsc.todolist.commons.Utils;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import javax.validation.ConstraintViolation;
-import javax.validation.ConstraintViolationException;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
 
+@RestControllerAdvice
+public class GlobalExceptionHandler {
 
-@ControllerAdvice
-public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
-
-    @Value("${enable.trace:#{false}}")
-    private boolean enableTrace;
-
-    @ExceptionHandler(ItemNotFoundException.class)
+    @ExceptionHandler({
+            ItemNotFoundException.class,
+            UsernameNotFoundException.class
+    })
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ResponseEntity<Object> handleItemNotFoundException(
-            ItemNotFoundException exception,
-            WebRequest request
-    ){
-
-        return buildErrorResponse(exception, HttpStatus.NOT_FOUND, request);
+    public ErrorResponse notFoundException(RuntimeException ex) {
+        return new ErrorResponse
+                .Builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.NOT_FOUND.value())
+                .status(HttpStatus.NOT_FOUND.name())
+                .errors(List.of(ex.getMessage()))
+                .build();
     }
 
     @ExceptionHandler(ConstraintViolationException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<Object> handleConstraintViolationException(
-            ConstraintViolationException ex,
-            WebRequest request
-    ){
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.BAD_REQUEST.value(), "Validation error. Check 'errors' field for details.");
-        for(ConstraintViolation e: ex.getConstraintViolations()){
-            errorResponse.addValidationError(e.getPropertyPath().toString(), ex.getMessage());
-        }
-        return ResponseEntity.badRequest().body(errorResponse);
-    }
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        ErrorResponse errorResponse = new ErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY.value(), "Validation error. Check 'errors' field for details.");
-        for (FieldError fieldError : ex.getBindingResult().getFieldErrors()) {
-            errorResponse.addValidationError(fieldError.getField(), fieldError.getDefaultMessage());
-        }
-        return ResponseEntity.unprocessableEntity().body(errorResponse);
+    public ResponseEntity<ErrorResponse> handleConstraintViolationException(ConstraintViolationException ex) {
+        List<String> errorList = ex.getConstraintViolations()
+                .stream()
+                .map(error -> error.getPropertyPath() + ": " + error.getMessage())
+                .collect(Collectors.toList());
+        ErrorResponse error = new ErrorResponse
+                .Builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST.name())
+                .errors(errorList)
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
-
-    private ResponseEntity<Object> buildErrorResponse(Exception exception,
-                                                      HttpStatus httpStatus,
-                                                      WebRequest request) {
-        return buildErrorResponse(exception, exception.getMessage(), httpStatus, request);
-    }
-
-    private ResponseEntity<Object> buildErrorResponse(
-            Exception exception,
-            String message,
-            HttpStatus httpStatus,
-            WebRequest request
-    ) {
-        ErrorResponse errorResponse = new ErrorResponse(
-                httpStatus.value(),
-                exception.getMessage()
-        );
-
-        if(enableTrace) errorResponse.setStackTrace(Utils.getStackTrace(exception));
-        return ResponseEntity.status(httpStatus).body(errorResponse);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorResponse> handleArgumentNotValidException(MethodArgumentNotValidException ex) {
+        List<String> errorList = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.toList());
+        ErrorResponse error = new ErrorResponse
+                .Builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.BAD_REQUEST.value())
+                .status(HttpStatus.BAD_REQUEST.name())
+                .errors(errorList)
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> genericException(Exception ex) {
+        ErrorResponse error = new ErrorResponse
+                .Builder()
+                .timestamp(LocalDateTime.now())
+                .code(HttpStatus.INTERNAL_SERVER_ERROR.value())
+                .status(HttpStatus.INTERNAL_SERVER_ERROR.name())
+                .errors(List.of(ex.getMessage()))
+                .build();
+        return new ResponseEntity<>(error, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 }

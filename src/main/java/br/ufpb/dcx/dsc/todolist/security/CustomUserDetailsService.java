@@ -1,28 +1,29 @@
+// CustomUserDetailsService.java
 package br.ufpb.dcx.dsc.todolist.security;
 
 import br.ufpb.dcx.dsc.todolist.model.User;
 import br.ufpb.dcx.dsc.todolist.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
-public class UserDetailsServiceImpl implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
+    @Autowired
     private UserRepository userRepository;
-
-    public UserDetailsServiceImpl(UserRepository userRepository){
-        this.userRepository = userRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User u = userRepository.findByUsername(username);
-        if(u == null){
-            throw new UsernameNotFoundException(username);
+
+        User user = userRepository.findByUsername(username);
+        if (user == null) {
+            throw new UsernameNotFoundException("User not found");
         }
-        UserDetails user = org.springframework.security.core.userdetails.User.withUsername(u.getUsername()).password(u.getPassword()).authorities("USER").build();
-        return user;
+        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(), new ArrayList<>());
     }
 }

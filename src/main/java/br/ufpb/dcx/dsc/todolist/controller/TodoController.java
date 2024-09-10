@@ -25,26 +25,26 @@ public class TodoController {
         this.modelMapper = modelMapper;
     }
 
-    @GetMapping(path = "/task/{taskId}")
+    @GetMapping(path = "/tasks/{taskId}")
     public TaskDTO getTask(@PathVariable Long taskId){
         Task t =  todoService.getTask(taskId);
         return convertToDTO(t);
     }
 
-    @GetMapping("/task")
+    @GetMapping("/tasks")
     public List<TaskDTO> getFilteredTasks(){
         List<Task> tasks = todoService.listTasks();
         return tasks.stream().map(task -> convertToDTO(task)).collect(Collectors.toList());
     }
 
-    @PostMapping("/board/{boardId}/task")
+    @PostMapping("/boards/{boardId}/tasks")
     public TaskDTO createTask(@RequestBody TaskDTO taskDTO, @PathVariable Long boardId){
         Task t = convertToEntity(taskDTO);
         Task taskCreated = todoService.saveTask(boardId, t);
         return convertToDTO(taskCreated);
     }
 
-    @PutMapping("/task/{taskId}")
+    @PutMapping("/tasks/{taskId}")
     public TaskDTO updateTask(@PathVariable Long taskId, @RequestBody TaskDTO taskDTO){
         Task t = convertToEntity(taskDTO);
         Task taskUpdated = todoService.updateTask(taskId, t);
@@ -52,7 +52,7 @@ public class TodoController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping("/task/{taskId}")
+    @DeleteMapping("/tasks/{taskId}")
     public void deleteTask(@PathVariable Long taskId){
         todoService.deleteTask(taskId);
     }
