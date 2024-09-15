@@ -34,7 +34,7 @@ public class UserController {
     }
 
     @GetMapping("/users/{userId}")
-    public UserDTOResponse getUser(@PathVariable @Min(4) Long userId){
+    public UserDTOResponse getUser(@PathVariable Long userId){
         User user = userService.getUser(userId);
         System.out.println(user.toString());
         return convertToDTO(user);
@@ -42,6 +42,7 @@ public class UserController {
 
 
     @PostMapping(path = "/users")
+    @ResponseStatus(HttpStatus.CREATED)
     UserDTOResponse createUser(@Valid @RequestBody UserDTO userDTO){
         User u = convertToEntity(userDTO);
         User saved = userService.createUser(u);
@@ -56,19 +57,23 @@ public class UserController {
         return convertToDTO(userUpdated);
     }
 
-    @ResponseStatus(HttpStatus.OK)
+
     @DeleteMapping("/users/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable Long userId){
         userService.deleteUser(userId);
     }
 
     @GetMapping("/boards/{boardId}/users/{userId}/share")
+    @ResponseStatus(HttpStatus.OK)
     public UserDTOResponse shareBoard(@PathVariable Long userId, @PathVariable Long boardId){
         User u = userService.share(boardId, userId);
         return convertToDTO(u);
     }
 
+
     @DeleteMapping("/boards/{boardId}/users/{userId}/share")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public UserDTOResponse unshareBoard(@PathVariable Long userId, @PathVariable Long boardId){
         User u = userService.unshare(boardId, userId);
         return convertToDTO(u);

@@ -1,6 +1,7 @@
 package br.ufpb.dcx.dsc.todolist.service;
 
 import br.ufpb.dcx.dsc.todolist.exception.ItemNotFoundException;
+import br.ufpb.dcx.dsc.todolist.exception.ShareBoardException;
 import br.ufpb.dcx.dsc.todolist.model.Board;
 import br.ufpb.dcx.dsc.todolist.model.Photo;
 import br.ufpb.dcx.dsc.todolist.model.User;
@@ -47,63 +48,44 @@ public class UserService {
     }
 
     public User updateUser(Long userId, User u) {
-        Optional<User> userOpt = userRepository.findById(userId);
-        if(userOpt.isPresent()){
-            User user = userOpt.get();
-            user.setEmail(u.getEmail());
-            user.setNome(u.getNome());
-            return userRepository.save(user);
-        }
-        return null;
+        User user = userRepository.findById(userId).orElseThrow(() -> new ItemNotFoundException("User " + userId + " not found!"));
+        user.setEmail(u.getEmail());
+        user.setNome(u.getNome());
+        return userRepository.save(user);
     }
     
     public void deleteUser(Long userId) {
-        Optional<User> uOpt = userRepository.findById(userId);
-        if(uOpt.isPresent()){
-            User u = uOpt.get();
-            // Remove all boards shared with me
-            u.getBoardsShared().removeAll(u.getBoardsShared());
+        User u = userRepository.findById(userId).orElseThrow(() -> new ItemNotFoundException("User " + userId + " not found!"));
 
-            // Remove users who share my boards
-            Collection<Board> myBoards = u.getBoards();
-            myBoards.stream().forEach(board -> {
-                Collection<User> users = board.getUsers();
-                users.stream().forEach(user -> {
-                    user.getBoardsShared().remove(board);
-                    userRepository.save(user);
-                });
-                boardRepository.save(board);
+        // Remove all boards shared with me
+        u.getBoardsShared().removeAll(u.getBoardsShared());
+        // Remove users who share my boards
+        Collection<Board> myBoards = u.getBoards();
+        myBoards.stream().forEach(board -> {
+            Collection<User> users = board.getUsers();
+            users.stream().forEach(user -> {
+                user.getBoardsShared().remove(board);
+                userRepository.save(user);
             });
-            userRepository.save(u);
-            userRepository.delete(u);
-        }
-
-        throw new ItemNotFoundException("User " + userId + " not found!");
+            boardRepository.save(board);
+        });
+        userRepository.save(u);
+        userRepository.delete(u);
 
     }
 
     public User share(Long boardId, Long userId){
-        Optional<User> uOpt = userRepository.findById(userId);
-        Optional<Board> bOpt = boardRepository.findById(boardId);
-
-        if(uOpt.isPresent() && bOpt.isPresent()){
-            User u = uOpt.get();
-            u.getBoardsShared().add(bOpt.get());
-            return userRepository.save(u);
-        }
-
-        return null;
+        User u = userRepository.findById(userId).orElseThrow(() -> new ItemNotFoundException("User " + userId + " not found!"));
+        Board b = boardRepository.findById(boardId).orElseThrow(() -> new ItemNotFoundException("User " + userId + " not found!"));
+        u.getBoardsShared().add(b);
+        return userRepository.save(u);
     }
 
     public User unshare(Long boardId, Long userId) {
-        Optional<User> uOpt = userRepository.findById(userId);
-        Optional<Board> bOpt = boardRepository.findById(boardId);
+        User u = userRepository.findById(userId).orElseThrow(() -> new ItemNotFoundException("User " + userId + " not found!"));
+        Board b = boardRepository.findById(boardId).orElseThrow(() -> new ItemNotFoundException("User " + userId + " not found!"));
+        u.getBoardsShared().remove(b);
+        return userRepository.save(u);
 
-        if(uOpt.isPresent() && bOpt.isPresent()){
-            User u = uOpt.get();
-            u.getBoardsShared().remove(bOpt.get());
-            return userRepository.save(u);
-        }
-        return null;
     }
 }
