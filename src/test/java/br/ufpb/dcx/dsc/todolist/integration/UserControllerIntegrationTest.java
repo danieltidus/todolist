@@ -1,7 +1,5 @@
 package br.ufpb.dcx.dsc.todolist.integration;
 
-import br.ufpb.dcx.dsc.todolist.model.User;
-import br.ufpb.dcx.dsc.todolist.repository.UserRepository;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -27,9 +25,6 @@ public class UserControllerIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
     PasswordEncoder passwordEncoder;
 
     @BeforeEach
@@ -40,11 +35,20 @@ public class UserControllerIntegrationTest {
     @Order(1)
     public void testGetUserById() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/users/1")
-                .accept(MediaType.APPLICATION_JSON))
+                        .accept(MediaType.APPLICATION_JSON))
                 .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(content().json("{\"username\":\"admin\"}"));
+    }
+
+    @Test
+    public void testNotFoundUser() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/api/users/100")
+                        .accept(MediaType.APPLICATION_JSON))
+                .andDo(result -> System.out.println(result.getResponse().getContentAsString()))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON));
     }
 
     @Test
