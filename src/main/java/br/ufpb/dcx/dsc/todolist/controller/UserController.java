@@ -36,7 +36,6 @@ public class UserController {
     @GetMapping("/users/{userId}")
     public UserDTOResponse getUser(@PathVariable Long userId){
         User user = userService.getUser(userId);
-        System.out.println(user.toString());
         return convertToDTO(user);
     }
 

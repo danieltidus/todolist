@@ -25,6 +25,8 @@ public class AdminUserSeeder {
         if (userRepository.findByUsername("admin") == null) {
             User admin = new User();
             admin.setUsername("admin");
+            admin.setNome("Admin");
+            admin.setEmail("admin@admin.com");
             admin.setPassword(passwordEncoder.encode("admin123"));
             userRepository.save(admin);
         }
