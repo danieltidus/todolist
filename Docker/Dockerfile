@@ -1,5 +1,5 @@
 # Use uma imagem base do Maven para compilar a aplicação
-FROM maven:3.8.6-openjdk-21 AS build
+FROM maven:3-eclipse-temurin-21-alpine AS build
 
 # Defina o diretório de trabalho dentro do container
 WORKDIR /app
@@ -16,8 +16,8 @@ COPY src ./src
 # Compile a aplicação
 RUN mvn clean package -DskipTests
 
-# Use uma imagem base do OpenJDK para rodar a aplicação
-FROM openjdk:21-jdk-slim
+# Efetivamente montando nossa imagem aqui com o jar gerado
+FROM maven:3-eclipse-temurin-21-alpine
 
 # Defina o diretório de trabalho dentro do container
 WORKDIR /app
