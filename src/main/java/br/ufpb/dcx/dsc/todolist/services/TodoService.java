@@ -28,10 +28,11 @@ public class TodoService {
         }
         return selected;
 
-        //Outra forma de fazer usando streams
-/*        return taskList.stream()
+        /* Outra forma de fazer usando streams
+        return taskList.stream()
                 .filter(task -> task.getUserId() == userId)
-                .collect(Collectors.toList());*/
+                .collect(Collectors.toList());
+         */
     }
 
     public List<Task> listTasks() {

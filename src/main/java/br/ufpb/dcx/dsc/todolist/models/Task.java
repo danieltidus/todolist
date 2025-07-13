@@ -16,14 +16,14 @@ public class Task {
     }
 
     private LocalDateTime deadline;
-    private Long id;
+    private final Long id;
     private static Long IdSequenceCounter = 0L;
 
     public Task(Long userId,String nome, LocalDateTime deadline){
         this.userId = userId;
         this.nome = nome;
         this.deadline = deadline;
-        this.id = Task.IdSequenceCounter++;
+        this.id = IdSequenceCounter++;
 
     }
 
