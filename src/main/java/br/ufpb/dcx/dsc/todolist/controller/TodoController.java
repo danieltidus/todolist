@@ -4,8 +4,6 @@ import br.ufpb.dcx.dsc.todolist.dto.TaskDTO;
 import br.ufpb.dcx.dsc.todolist.mappers.TaskMapper;
 import br.ufpb.dcx.dsc.todolist.models.Task;
 import br.ufpb.dcx.dsc.todolist.services.TodoService;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,13 +30,6 @@ public class TodoController {
         Task t =  todoService.getTask(taskId);
         return taskMapper.toDto(t);
     }
-
-    // Exemplo de rota para listagem de todas as tarefas sem query string
-//    @GetMapping("/tasks")
-//    public List<TaskDTO> getFilteredTasks(){
-//        List<Task> tasks = todoService.listTasks();
-//        return tasks.stream().map(taskMapper::toDto).collect(Collectors.toList());
-//    }
 
     // Exemplo com Query strings via ResquestParam - comente o de cima caso queira usar esta rota.
     @GetMapping("/tasks")
