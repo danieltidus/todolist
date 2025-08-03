@@ -13,14 +13,14 @@ public class TodoService {
 //    private final ArrayList<Task> taskList= new ArrayList<>();
     private final TaskRepository taskRepository;
 
-    TodoService(TaskRepository taskRepository){
-    //TodoService() {
-        this.taskRepository = taskRepository;
-//        taskList.add(new Task(1L, "Escrever Relatório", LocalDate.now()));
-//        taskList.add(new Task(1L, "Lavar a louça", LocalDate.now()));
-//        taskList.add(new Task(2L, "Estudar para prova", LocalDate.now()));
-//        taskList.add(new Task(2L, "Alimentar os gatos", LocalDate.now()));
-//        System.out.println(taskList);
+    //TodoService(TaskRepository taskRepository){
+    TodoService() {
+//        this.taskRepository = taskRepository;
+        taskList.add(new Task(1L, "Write Report", LocalDate.now()));
+        taskList.add(new Task(1L, "Wash the dishes", LocalDate.now()));
+        taskList.add(new Task(2L, "Study for exam", LocalDate.now()));
+        taskList.add(new Task(2L, "Feed the cats", LocalDate.now()));
+        System.out.println(taskList);
     }
     public Task getTask(Long taskId){
         return taskRepository.findById(taskId).orElseThrow(() -> new NoSuchElementException("Item not found"));
