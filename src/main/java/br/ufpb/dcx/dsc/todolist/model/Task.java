@@ -1,6 +1,5 @@
 package br.ufpb.dcx.dsc.todolist.model;
 
-import javax.persistence.*;
 import java.time.LocalDate;
 
 //@Entity
@@ -9,7 +8,7 @@ public class Task {
 
  //   @Id
   //  @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    final private Long id;
 
 //    @Column(name = "nome")
     private String nome;
@@ -20,7 +19,7 @@ public class Task {
 //    @Column(name = "deadline")
     private LocalDate deadline;
 
-    // Não precisamos mais deste gerador sequencial
+    // FIXME: We no longer need this sequential generator
     private static Long IdSequenceCounter = 0L;
 
     public Task(){
@@ -59,7 +58,7 @@ public class Task {
         this.deadline = deadline;
     }
 
-    // Para o ID não temos set já que ele é gerado automaticamente
+    // For ID, we don't have a setter since it's generated automatically
     public Long getId() {
         return id;
     }

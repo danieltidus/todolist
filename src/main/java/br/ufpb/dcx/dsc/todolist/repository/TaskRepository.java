@@ -1,7 +1,7 @@
 package br.ufpb.dcx.dsc.todolist.repository;
 
 import br.ufpb.dcx.dsc.todolist.model.Task;
-import org.springframework.data.jpa.repository.JpaRepository;
+//import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
