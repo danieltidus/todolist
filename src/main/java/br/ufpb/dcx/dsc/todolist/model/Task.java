@@ -1,6 +1,7 @@
 package br.ufpb.dcx.dsc.todolist.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+
 import java.time.LocalDate;
 
 @Entity
@@ -9,27 +10,41 @@ public class Task {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long taskId;
+    private Long id;
 
-    @Column(name = "nome")
-    private String nome;
+    @Column(name = "name")
+    private String name;
 
-    @Column(name = "deadline")
+    // Board relationship - each task belongs to one board
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    private Board board;
+
+    @Column(name = "dead_line")
     private LocalDate deadline;
-
-    @ManyToOne()
-    @JoinColumn(name = "user_id")
-    private User user;
 
     public Task(){
     }
 
-    public String getNome() {
-        return nome;
+    public Task(String name, LocalDate deadline){
+        this.name = name;
+        this.deadline = deadline;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Board getBoard() {
+        return board;
+    }
+
+    public void setBoard(Board board) {
+        this.board = board;
     }
 
     public LocalDate getDeadline() {
@@ -40,26 +55,18 @@ public class Task {
         this.deadline = deadline;
     }
 
-    // Para o ID não temos set já que ele é gerado automaticamente
+    // For ID, we don't have a setter since it's generated automatically
     public Long getId() {
-        return taskId;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
+        return id;
     }
 
     @Override
     public String toString() {
         return "Task{" +
-                "id=" + taskId +
-                ", nome='" + nome + '\'' +
+                "name='" + name + '\'' +
                 ", deadline=" + deadline +
-                ", user=" + user +
+                ", id=" + id +
+                ", board=" + (board != null ? board.getName() : "null") +
                 '}';
     }
 }

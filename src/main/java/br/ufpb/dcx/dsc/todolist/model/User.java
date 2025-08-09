@@ -1,7 +1,7 @@
 package br.ufpb.dcx.dsc.todolist.model;
 
+import jakarta.persistence.*;
 
-import javax.persistence.*;
 import java.util.Collection;
 
 @Entity
@@ -10,23 +10,28 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id")
     private Long id;
 
-    @Column(name = "nome")
-    private String nome;
+    @Column(name = "name")
+    private String name;
     @Column(name = "email")
     private String email;
 
-    @ManyToMany(mappedBy = "users")
-    private Collection<Board> boards;
+    // Boards owned by this user (one-to-many)
+    @OneToMany(mappedBy = "owner", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    private Collection<Board> ownedBoards;
 
-    @OneToOne
+    // Boards shared with this user (many-to-many)
+    @ManyToMany(mappedBy = "sharedWithUsers", fetch = FetchType.LAZY)
+    private Collection<Board> sharedBoards;
+
+
+    /*INFO: We use cascade = CascadeType.ALL and orphanRemoval = true to ensure that the photo is deleted if the user
+    is deleted and to ensure that the photo is updated if the user is updated. */
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "photo_id")
     private Photo photo;
 
-    @OneToMany(mappedBy = "user")
-    private Collection<Task> tasks;
     public User() {
     }
 
@@ -46,12 +51,36 @@ public class User {
         this.email = email;
     }
 
-    public String getNome() {
-        return nome;
+    public String getName() {
+        return name;
     }
 
-    public void setNome(String nome) {
-        this.nome = nome;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Collection<Board> getOwnedBoards() {
+        return ownedBoards;
+    }
+
+    public void setOwnedBoards(Collection<Board> ownedBoards) {
+        this.ownedBoards = ownedBoards;
+    }
+
+    public Collection<Board> getSharedBoards() {
+        return sharedBoards;
+    }
+
+    public void setSharedBoards(Collection<Board> sharedBoards) {
+        this.sharedBoards = sharedBoards;
+    }
+
+    public Photo getPhoto() {
+        return photo;
+    }
+
+    public void setPhoto(Photo photo) {
+        this.photo = photo;
     }
 
     @Override
@@ -59,7 +88,7 @@ public class User {
         return "User{" +
                 "userId=" + id +
                 ", email='" + email + '\'' +
-                ", nome='" + nome + '\'' +
+                ", name='" + name + '\'' +
                 '}';
     }
 }

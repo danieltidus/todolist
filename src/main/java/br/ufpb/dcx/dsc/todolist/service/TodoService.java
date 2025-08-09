@@ -2,38 +2,28 @@ package br.ufpb.dcx.dsc.todolist.service;
 
 import br.ufpb.dcx.dsc.todolist.model.Task;
 import br.ufpb.dcx.dsc.todolist.repository.TaskRepository;
-import br.ufpb.dcx.dsc.todolist.repository.UserRepository;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Service
 public class TodoService {
 
+    private final TaskRepository taskRepository;
 
-    private TaskRepository taskRepository;
-    private UserRepository userRepository;
-
-    TodoService(TaskRepository taskRepository, UserRepository userRepository)
-    {
+    TodoService(TaskRepository taskRepository){
         this.taskRepository = taskRepository;
-        this.userRepository = userRepository;
     }
-
     public Task getTask(Long taskId){
-        return taskRepository.getReferenceById(taskId);
+        return taskRepository.findById(taskId).orElseThrow(() -> new NoSuchElementException("Item not found"));
     }
 
     public List<Task> listTasks(Long userId){
-        if(userId != null){
-            return taskRepository.findAllByUserId(userId);
+        if (userId == null) {
+            return taskRepository.findAll();
         }
-        return taskRepository.findAll();
+        // Return tasks from both owned and shared boards of the given user
+        return taskRepository.findTasksByOwnerIdAndSharedBoards(userId);
     }
 
     public Task saveTask(Task t) {
@@ -41,19 +31,18 @@ public class TodoService {
     }
 
     public void deleteTask(Long taskId) {
-        taskRepository.deleteById(taskId);
+        taskRepository.findById(taskId)
+                .ifPresent((task) -> taskRepository.deleteById(task.getId()));
     }
 
     public Task updateTask(Long id, Task t) {
-        Optional<Task> taskData = taskRepository.findById(id);
-        if(taskData.isPresent()){
-            Task toUpdate = taskData.get();
-            toUpdate.setDeadline(t.getDeadline());
-            toUpdate.setNome(t.getNome());
-            taskRepository.save(toUpdate);
-            return toUpdate;
-        }
-        return null;
-    }
 
+        Optional<Task> taskData = taskRepository.findById(id);
+        Task toUpdate = taskData.orElseThrow(NoSuchElementException::new);
+        toUpdate.setDeadline(t.getDeadline());
+        toUpdate.setName(t.getName());
+        taskRepository.save(toUpdate);
+        return toUpdate;
+
+    }
 }
