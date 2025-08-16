@@ -25,7 +25,13 @@ public class UserController {
     }
 
     @GetMapping(path = "/users")
-    List<UserDTO> listUsers(){
+    List<UserDTO> listUsers(@RequestParam(required = false) String email){
+        if (email != null && !email.isEmpty()) {
+            // Se email foi fornecido, busca por email usando NamedQuery
+            User user = userService.getUserByEmail(email);
+            return List.of(convertToDTO(user));
+        }
+        // Se não, lista todos os usuários
         return userService.listUsers()
                 .stream()
                 .map(this::convertToDTO)
@@ -36,6 +42,7 @@ public class UserController {
     UserDTO getUser(@PathVariable Long id) {
         return convertToDTO(userService.getUser(id));
     }
+
     @PostMapping(path = "/users")
     UserDTO createUser(@RequestBody UserCreateDTO userCreateDTO){
         User user = convertToEntity(userCreateDTO);

@@ -16,6 +16,12 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    // Método que usa a NamedQuery findByEmail
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new NoSuchElementException("User not found with email: " + email));
+    }
+
     public List<User> listUsers() {
         return userRepository.findAll();
     }

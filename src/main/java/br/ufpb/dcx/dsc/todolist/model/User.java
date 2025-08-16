@@ -6,6 +6,10 @@ import java.util.Collection;
 
 @Entity
 @Table(name = "tb_users")
+@NamedQuery(
+        name = "User.findByEmail",
+        query = "SELECT u FROM User u WHERE u.email = :email"
+)
 public class User {
 
     @Id
