@@ -1,6 +1,7 @@
 package br.ufpb.dcx.dsc.todolist.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 import java.util.Collection;
 
@@ -16,9 +17,15 @@ public class User {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(name = "name")
+    @Column(name = "name", nullable = false, length = 100)
+    @NotBlank(message = "Name is required")
+    @Size(min = 2, max = 100, message = "Name must be between 2 and 100 characters")
     private String name;
-    @Column(name = "email")
+    
+    @Column(name = "email", nullable = false, unique = true, length = 255)
+    @NotBlank(message = "Email is required")
+    @Email(message = "Email must be valid")
+    @Size(max = 255, message = "Email must not exceed 255 characters")
     private String email;
 
     // Boards owned by this user (one-to-many)

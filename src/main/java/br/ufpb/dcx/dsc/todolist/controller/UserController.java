@@ -7,13 +7,16 @@ import br.ufpb.dcx.dsc.todolist.dto.UserDTO;
 import br.ufpb.dcx.dsc.todolist.dto.UserCreateDTO;
 import org.modelmapper.ModelMapper;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.List;
 import java.util.stream.Collectors;
-import br.ufpb.dcx.dsc.todolist.model.Photo;
 
 @RestController
 @RequestMapping(path = "/api")
+@Validated
 public class UserController {
 
     private UserService userService;
@@ -39,32 +42,32 @@ public class UserController {
     }
 
     @GetMapping(path = "/users/{id}")
-    UserDTO getUser(@PathVariable Long id) {
+    UserDTO getUser(@PathVariable @Positive(message = "User ID must be positive") Long id) {
         return convertToDTO(userService.getUser(id));
     }
 
     @PostMapping(path = "/users")
-    UserDTO createUser(@RequestBody UserCreateDTO userCreateDTO){
+    UserDTO createUser(@Valid @RequestBody UserCreateDTO userCreateDTO){
         User user = convertToEntity(userCreateDTO);
         User created = userService.createUser(user);
         return convertToDTO(created);
     }
 
     @PutMapping(path = "/users/{id}")
-    UserDTO updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
+    UserDTO updateUser(@PathVariable @Positive(message = "User ID must be positive") Long id, @Valid @RequestBody UserDTO userDTO) {
         User toUpdate = convertToEntity(userDTO);
         User updated = userService.updateUser(id, toUpdate);
         return convertToDTO(updated);
     }
 
     @PatchMapping(path = "/users/{id}/photo")
-    UserDTO updateUserPhoto(@PathVariable Long id, @RequestBody PhotoDTO photo) {
+    UserDTO updateUserPhoto(@PathVariable @Positive(message = "User ID must be positive") Long id, @Valid @RequestBody PhotoDTO photo) {
         User updated = userService.updateUserPhoto(id, photo.getUrl());
         return convertToDTO(updated);
     }
 
     @DeleteMapping(path = "/users/{id}")
-    void deleteUser(@PathVariable Long id) {
+    void deleteUser(@PathVariable @Positive(message = "User ID must be positive") Long id) {
         userService.deleteUser(id);
     }
 
